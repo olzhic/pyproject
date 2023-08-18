@@ -8,8 +8,9 @@ class bot:
         self.hero_choice = " "
 
     def game(self):
-        while True:
-            if self.hero.isbot:
+        if self.hero.isbot == True:
+            while True:
+
                 self.enemy_choice = choice(self.rps)
                 self.hero_choice = choice(self.rps)
 
@@ -71,7 +72,17 @@ class bot:
                         print(self.enemy_choice)
                         print(f'Loss {self.hero} / {self.enemy}')
 
-            else:
+                    if self.enemy.hp <= 0:
+                        print("Your ally won")
+                        break
+
+                    if self.hero.hp <= 0:
+                        print("Your ally died")
+                        break
+
+    def game_not_bot(self):
+        if self.hero.isbot == False:
+         while True:
                 self.enemy_choice = choice(self.rps)
                 self.hero_choice = input(self.rps)
 

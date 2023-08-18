@@ -22,14 +22,20 @@ if p == "Water":
     elif ah == "Attack":
         a = input("Who do you want to attack, Adwatia or Hex? ")
         if a == "Hex":
-            bot = Bot.bot(Charmcaster, Hex)
+            f = input("Should your ally start a battle? ")
+            if f == "Yes":
+                bot = Bot.bot(Spellbinder, Adwatia)
+                print("Adwatia:", Adwatia)
+                bot.game()
+                print("Adwatia:", Adwatia)
+            player = Bot.bot(Charmcaster, Hex)
             print("Hex:", Hex)
-            bot.game()
+            player.game_not_bot()
             print("Hex:",Hex)
         elif a == "Adwatia":
-            bot = Bot.bot(Charmcaster, Adwatia)
+            player = Bot.bot(Charmcaster, Adwatia)
             print("Adwatia: ", Adwatia)
-            bot.game()
+            player.game_not_bot()
             print("Adwatia:", Adwatia)
 
 elif p == "Fire":
@@ -45,14 +51,14 @@ elif p == "Fire":
     elif ap == "Attack":
         h = input("Who do you want to attack, Charmcaster or Spellbinder? ")
         if h == "Charmcaster":
-            bot = Bot.bot(Adwatia, Charmcaster)
+            player = Bot.bot(Adwatia, Charmcaster)
             print("Charmcaster:", Charmcaster)
-            bot.game()
+            player.game_not_bot()
             print("Charmcaster:", Charmcaster)
         elif h == "Spellbinder":
-            bot = Bot.bot(Adwatia, Spellbinder)
+            player = Bot.bot(Adwatia, Spellbinder)
             print("Spellbinder:", Spellbinder)
-            bot.game()
+            player.game_not_bot()
             print("Spellbinder:", Spellbinder)
 
 
