@@ -1,9 +1,10 @@
 class Water_Wizard:
-    def __init__(self, hp, dmg, mana):
+    def __init__(self, hp, dmg, mana, isbot):
         self.hp = hp
         self.dmg = dmg
         self.type = "Water"
         self.mana = mana
+        self.isbot = isbot
     def waterfall(self, entity):
         if entity.type == "fire":
             entity.setHp(self.dmg)
