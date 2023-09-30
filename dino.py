@@ -12,22 +12,13 @@ RED = (255, 0, 0)
 
 
 
-class cactus():
-    def __init__(self, position):
-        self.image = pygame.image.load("imp_left2.png")
-        self.image = pygame.transform.scale(self.image, (100, 125))
+class sky():
+    def __init__(self,):
+        self.image = pygame.image.load("sky.png")
         self.rect = self.image.get_rect()
-        self.rect.center = position
-        
-
-    def kill(self):
-        self.rect.x -= 10
-        
-
     def draw(self):
         screen.blit(self.image, self.rect)
-        if self.x < 0:
-            self.kill
+        
 
 
 class Dino():
@@ -59,20 +50,42 @@ class Dino():
     def draw(self):
         screen.blit(self.image, self.rect)
 
-            
 
 
-            
-            
-            
+
+
+class cactus():
+    def __init__(self, position,):
+        self.image = pygame.image.load("imp_left2.png")
+        self.image = pygame.transform.scale(self.image, (100, 125))
+        self.rect = self.image.get_rect()
+        self.rect.center = position
+        self.death = pygame.image.load("You_died.png")
+        self.death = pygame.transform.scale(self.death, (500, 200))
+        self.speed = 10
+
+    def kill(self, Dino):
+        self.rect.x -= self.speed
+        if Dino.rect.colliderect(self.rect):
+            screen.blit(self.death, (400, 200))
+            self.rect.x += self.speed
+        if  self.rect.x < -100:
+            self.rect.x += 1400
         
+        
+
+    def draw(self):
+        screen.blit(self.image, self.rect)
+        if self.rect.x < 0:
+            self.kill
+
+
+
+
 d = Dino((100, 500))
 c = cactus((1000, 500))
-
-
+s = sky()
 pygame.init() 
-
-
 
 
 while running:
@@ -89,7 +102,8 @@ while running:
         d.jump()
         d.draw()
         c.draw()
-
+        c.kill(d)
+        s.draw()
     pygame.display.flip()
     clock.tick(FPS)
 
