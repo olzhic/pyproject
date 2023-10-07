@@ -87,8 +87,8 @@ class Rock(pygame.sprite.Sprite):
         
 r = Rock()
 p = Player()
-all_sprites = pygame.sprite.Group
-all_sprites.add(p)
+all_sprites = pygame.sprite.Group()
+all_sprites.add(p, r)
 
 
 pygame.init()
@@ -102,6 +102,7 @@ while running:
     ekran.fill(RED)
     all_sprites.draw(ekran)
     p.update()
+    r.rotate()
     pygame.display.flip()
     clock.tick(FPS)
 
