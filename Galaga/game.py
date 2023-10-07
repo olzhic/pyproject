@@ -1,8 +1,11 @@
 import pygame, random
 
-image_rock = pygame.image.load('C:\\Users\\Asus\\Desktop\\Топор Хранилище\\olzhic\\Galaga\\sprites\\stone.png')
+image_rock = pygame.image.load('C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\stone.png')
 sizes = [[64, 64], [96, 96], [128, 128], [160, 160], [198, 198]]
-rocks = [0, 1, 2, 3, 4]
+rocks = []
+
+for size in sizes:
+    rocks.append(pygame.transform.scale(image_rock, size))
 RES = (1280, 720)
 
 ekran = pygame.display.set_mode(RES)
@@ -15,11 +18,12 @@ RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
 class Player(pygame.sprite.Sprite,):
-    def __init__(self):
+    def __init__(self, position):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('C:\\Users\\Asus\\Desktop\\Топор Хранилище\\olzhic\\Galaga\\sprites\\spaceship.png')
+        self.image = pygame.image.load('C:\\Users\\st3\Desktop\\Olzhas\\Galaga\\sprites\\spaceship.png')
         self.rect = self.image.get_rect()
         self.speed = 15
+        self.rect.center = position
         
 
     def update(self):
@@ -36,16 +40,19 @@ class Player(pygame.sprite.Sprite,):
           
         elif keys[pygame.K_d]:
             self.rect.x += self.speed
+
+
+
            
 
 class Rock(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('C:\\Users\\Asus\\Desktop\\Топор Хранилище\\olzhic\\Galaga\\sprites\\stone.png')
-        self.index = random.randint(0, 3)
+        self.index = random.randint(0, 4)
+        self.image = rocks[self.index]
         self.radius = sizes[self.index][0] // 2
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(800 - self.rect.width)
+        self.rect.x = random.randrange(1280 - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
         self.rot_speed = random.randrange(-4, 4)
         self.rot_angle = 0
@@ -70,25 +77,42 @@ class Rock(pygame.sprite.Sprite):
         #enemy bounces off the borders
         if(coords[0] + self.dx <- 128):
             self.kill()
-        elif(coords[0] + self.dx > 928):
+        elif(coords[0] + self.dx > 1408):
             self.kill()
         else:
             coords = coords[0] + self.dx, coords[1]
         if(coords[1] + self.dy <- 128):
             self.kill()
-        elif(coords[1] + self.dy > 728):
+        elif(coords[1] + self.dy > 848):
             self.kill()
         else:
             coords = coords[0], coords[1] + self.dy
         self.rect.center = coords
         self.rotate()
+    
+
+
 
 
         
 r = Rock()
-p = Player()
+p = Player((640, 600))
+player = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(p, r)
+player.add(p)
+shootables = pygame.sprite.Group()
+shootables.add(r)
+
+def spawn():
+    for i in range(10 - len(shootables)):
+        t = Rock()
+        all_sprites.add(t)
+        shootables.add(t)
+spawn()
+
+
+
 
 
 pygame.init()
@@ -97,12 +121,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-
-    
-    ekran.fill(RED)
+    spawn()
+    ekran.fill(BLACK)
     all_sprites.draw(ekran)
-    p.update()
-    r.rotate()
+    all_sprites.update()
+    player_hit = pygame.sprite.spritecollide(p, shootables, False, pygame.sprite.collide_circle)
+    if player_hit:
+        running = False
     pygame.display.flip()
     clock.tick(FPS)
 
