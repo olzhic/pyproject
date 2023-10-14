@@ -3,6 +3,7 @@ import pygame, random
 image_rock = pygame.image.load('C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\stone.png')
 sizes = [[64, 64], [96, 96], [128, 128], [160, 160], [198, 198]]
 rocks = []
+image_laser = pygame.image.load("C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\laser4.png")
 
 for size in sizes:
     rocks.append(pygame.transform.scale(image_rock, size))
@@ -24,6 +25,9 @@ class Player(pygame.sprite.Sprite,):
         self.rect = self.image.get_rect()
         self.speed = 15
         self.rect.center = position
+        self.shoot_delay = 100
+        self.last_shoot = pygame.time.get_ticks()
+
         
 
     def update(self):
@@ -40,6 +44,45 @@ class Player(pygame.sprite.Sprite,):
           
         elif keys[pygame.K_d]:
             self.rect.x += self.speed
+
+        self.shoot()
+
+    def shoot(self):
+        now = pygame.time.get_ticks()
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_SPACE]:
+            if now - self.last_shoot - self.shoot_delay > 0:
+                cords = self.rect.center
+                ans = [(cords[0] + 17, cords[1] - 25), (cords[0] - 17, cords[1] - 25), (cords[0] + 27, cords[1] - 1), (cords[0] - 27, cords[1] - 5)]
+                bullet = Bullet((random.choice(ans)))
+                all_sprites.add(bullet)
+                bullets.add(bullet)
+                self.last_shoot = now
+
+    
+
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, cords):
+        super().__init__()
+        self.image = image_laser
+        self.rect = self.image.get_rect()
+        self.rect.center = cords
+        self.dx = 0
+        self.dy = -15
+
+    def update(self):
+        cords = self.rect.center
+        if(cords[1] + self.dy < 50):
+            self.kill()
+        elif(cords[1] + self.dy > 1230):
+            self.kill()
+        else:
+            cords = cords[0], cords[1] + self.dy
+        self.rect.center = cords
+        
+        
+
 
 
 
@@ -99,6 +142,7 @@ r = Rock()
 p = Player((640, 600))
 player = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
+bullets = pygame.sprite.Group()
 all_sprites.add(p, r)
 player.add(p)
 shootables = pygame.sprite.Group()
@@ -123,6 +167,7 @@ while running:
 
     spawn()
     ekran.fill(BLACK)
+
     all_sprites.draw(ekran)
     all_sprites.update()
     player_hit = pygame.sprite.spritecollide(p, shootables, False, pygame.sprite.collide_circle)
