@@ -1,21 +1,20 @@
 import pygame, random
 
-image_rock = pygame.image.load('C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\stone.png')
+image_rock = pygame.image.load('C:\\Users\\st3\\Desktop\\Olzhas\\urok\\sprites\\stone.png')
 sizes = [[64, 64], [96, 96], [128, 128], [160, 160], [198, 198]]
 rocks = []
-image_laser = pygame.image.load("C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\laser5.png")
-image_explode = (pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion00.png"),
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion01.png"), 
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion02.png"),
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion03.png"),
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion04.png"),
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion05.png"),
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion06.png"), 
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion07.png"), 
-                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion08.png"))
-laser_upgrade = pygame.image.load("Galaga\\sprites\\laser_beam.png")
-pup = pygame.image.load('spritenasral\\mr_crab.png')
-
+image_laser = pygame.image.load("C:\\Users\\st3\\Desktop\\Olzhas\\urok\\sprites\\laser5.png")
+image_explode = (pygame.image.load("urok\\sprites\\explosions\\regularExplosion00.png"),
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion01.png"), 
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion02.png"),
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion03.png"),
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion04.png"),
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion05.png"),
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion06.png"), 
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion07.png"), 
+                  pygame.image.load("urok\\sprites\\explosions\\regularExplosion08.png"))
+laser_upgrade = pygame.image.load("urok\\sprites\\laser_beam.png")
+pup = pygame.image.load('spritenasral\\upgrade_bot2.png')
 for size in sizes:
     rocks.append(pygame.transform.scale(image_rock, size))
 RES = (1280, 720)
@@ -29,10 +28,12 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
+                 
+
 class Player(pygame.sprite.Sprite,):
     def __init__(self, position):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('C:\\Users\\st3\Desktop\\Olzhas\\Galaga\\sprites\\spaceship.png')
+        self.image = pygame.image.load('C:\\Users\\st3\Desktop\\Olzhas\\urok\\sprites\\spaceship.png')
         self.rect = self.image.get_rect()
         self.speed = 15
         self.rect.center = position
@@ -91,26 +92,26 @@ class Bullet(pygame.sprite.Sprite):
         else:
             cords = cords[0], cords[1] + self.dy
         self.rect.center = cords
+
         
 class power_up(pygame.sprite.Sprite):
     def __init__(self, ):
         super().__init__()
         self.image = pup
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(1280 - self.rect.width)
+        self.rect.x = random.randrange((0 + self.rect.width), (1280 - self.rect.width))
         self.rect.y = random.randrange(-150, -100)
-        self.speed = random.randrange(10, 100)
+        self.speed = random.randrange(10, 40)
 
 
     def update(self):
         self.rect.y += self.speed
-        
+        if self.rect.y >= 720:
+            self.kill()
+        if pygame.sprite.spritecollide(p, powerUp, True, ):
+            Bullet.image = laser_upgrade          
+            self.kill()
 
-
-
-
-
-           
 
 class Rock(pygame.sprite.Sprite):
     def __init__(self,):
@@ -179,23 +180,14 @@ class Explosion(pygame.sprite.Sprite):
                 self.last_stage = now
                 self.image = image_explode[self.stage]
 
-    
-
-
-
-
-        
-w = power_up()
 p = Player((640, 600))
 player = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 all_sprites.add(p)
-all_sprites.add(w)
 player.add(p)
 shootables = pygame.sprite.Group()
 powerUp = pygame.sprite.Group()
-powerUp.add(w)
 
 def spawn():
     for i in range(10 - len(shootables)):
@@ -204,8 +196,12 @@ def spawn():
         shootables.add(t)
 spawn()
 
-
-
+def spawn_up():
+    for i in range(1 - len(powerUp)):
+        w = power_up()
+        powerUp.add(w)
+        all_sprites.add(w)
+        
 
 
 pygame.init()
@@ -213,10 +209,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+    spawn_up()
     spawn()
     ekran.fill(BLACK)
-
     all_sprites.draw(ekran)
     all_sprites.update()
     player_hit = pygame.sprite.spritecollide(p, shootables, False, pygame.sprite.collide_circle)
@@ -228,9 +223,6 @@ while running:
     for i in hit:
         t = Explosion(i.rect.center)
         all_sprites.add(t)
-    
-    if pygame.sprite.spritecollide(p, powerUp, True, pygame.sprite.collide_circle):
-            w.kill()
             
     
     pygame.display.flip()
