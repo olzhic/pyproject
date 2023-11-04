@@ -15,6 +15,7 @@ image_explode = (pygame.image.load("urok\\sprites\\explosions\\regularExplosion0
                   pygame.image.load("urok\\sprites\\explosions\\regularExplosion08.png"))
 laser_upgrade = pygame.image.load("urok\\sprites\\laser_beam.png")
 pup = pygame.image.load('spritenasral\\upgrade_bot2.png')
+pUp = pygame.image.load("urok\\sprites\\power_up.png")
 for size in sizes:
     rocks.append(pygame.transform.scale(image_rock, size))
 RES = (1280, 720)
@@ -27,7 +28,7 @@ running = True
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
-
+RECORD = 0
                  
 
 class Player(pygame.sprite.Sprite,):
@@ -97,11 +98,11 @@ class Bullet(pygame.sprite.Sprite):
 class power_up(pygame.sprite.Sprite):
     def __init__(self, ):
         super().__init__()
-        self.image = pup
+        self.image = pUp
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange((0 + self.rect.width), (1280 - self.rect.width))
         self.rect.y = random.randrange(-150, -100)
-        self.speed = random.randrange(10, 40)
+        self.speed = random.randrange(10, 15)
 
 
     def update(self):
@@ -111,6 +112,7 @@ class power_up(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(p, powerUp, True, ):
             Bullet.image = laser_upgrade          
             self.kill()
+        
 
 
 class Rock(pygame.sprite.Sprite):
@@ -174,7 +176,7 @@ class Explosion(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_stage >= self.delay:
             if self.stage == 8:
-                self.kill
+                self.kill()
             else:
                 self.stage += 1
                 self.last_stage = now
@@ -189,6 +191,7 @@ player.add(p)
 shootables = pygame.sprite.Group()
 powerUp = pygame.sprite.Group()
 
+
 def spawn():
     for i in range(10 - len(shootables)):
         t = Rock()
@@ -201,10 +204,13 @@ def spawn_up():
         w = power_up()
         powerUp.add(w)
         all_sprites.add(w)
-        
+        if pygame.sprite.spritecollide(p, powerUp, True, ):
+            Bullet.image = laser_upgrade          
+            break
 
 
 pygame.init()
+font = pygame.font.SysFont('ARIAL', 25)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -214,8 +220,10 @@ while running:
     ekran.fill(BLACK)
     all_sprites.draw(ekran)
     all_sprites.update()
-    player_hit = pygame.sprite.spritecollide(p, shootables, False, pygame.sprite.collide_circle)
-    if player_hit:
+    player_hit = pygame.sprite.spritecollide(p, shootables, True, pygame.sprite.collide_circle)
+    for i in player_hit:
+        e = Explosion(p.rect.center)
+        all_sprites.add(e)
         running = False
 
 
@@ -223,10 +231,17 @@ while running:
     for i in hit:
         t = Explosion(i.rect.center)
         all_sprites.add(t)
-            
-    
+        RECORD += 10
+
+    caption = font.render(str(RECORD),True, 'RED')
+
+    all_sprites.draw(ekran)
+    ekran.blit(caption, (10, 10))
+
     pygame.display.flip()
     clock.tick(FPS)
+    pygame.display.update()
+    pygame.display.flip()
 
 
 pygame.quit()
