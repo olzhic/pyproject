@@ -3,7 +3,18 @@ import pygame, random
 image_rock = pygame.image.load('C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\stone.png')
 sizes = [[64, 64], [96, 96], [128, 128], [160, 160], [198, 198]]
 rocks = []
-image_laser = pygame.image.load("C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\laser4.png")
+image_laser = pygame.image.load("C:\\Users\\st3\\Desktop\\Olzhas\\Galaga\\sprites\\laser5.png")
+image_explode = (pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion00.png"),
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion01.png"), 
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion02.png"),
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion03.png"),
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion04.png"),
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion05.png"),
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion06.png"), 
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion07.png"), 
+                  pygame.image.load("Galaga\\sprites\\explosions\\regularExplosion08.png"))
+laser_upgrade = pygame.image.load("Galaga\\sprites\\laser_beam.png")
+pup = pygame.image.load('spritenasral\\mr_crab.png')
 
 for size in sizes:
     rocks.append(pygame.transform.scale(image_rock, size))
@@ -81,7 +92,20 @@ class Bullet(pygame.sprite.Sprite):
             cords = cords[0], cords[1] + self.dy
         self.rect.center = cords
         
+class power_up(pygame.sprite.Sprite):
+    def __init__(self, ):
+        super().__init__()
+        self.image = pup
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randrange(1280 - self.rect.width)
+        self.rect.y = random.randrange(-150, -100)
+        self.speed = random.randrange(10, 100)
+
+
+    def update(self):
+        self.rect.y += self.speed
         
+
 
 
 
@@ -89,7 +113,7 @@ class Bullet(pygame.sprite.Sprite):
            
 
 class Rock(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,):
         pygame.sprite.Sprite.__init__(self)
         self.index = random.randint(0, 4)
         self.image = rocks[self.index]
@@ -102,6 +126,7 @@ class Rock(pygame.sprite.Sprite):
         self.dx = random.uniform(-7, 7)
         self.dy = random.uniform(1, 7)
         self.last_update = pygame.time.get_ticks()
+
 
 
     def rotate(self):
@@ -132,21 +157,45 @@ class Rock(pygame.sprite.Sprite):
             coords = coords[0], coords[1] + self.dy
         self.rect.center = coords
         self.rotate()
+
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, coords):
+        super().__init__()
+        self.stage = 0
+        self.image = image_explode[self.stage]
+        self.rect = self.image.get_rect()
+        self.rect.center = coords
+        self.delay = 60
+        self.last_stage = pygame.time.get_ticks()
+
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_stage >= self.delay:
+            if self.stage == 8:
+                self.kill
+            else:
+                self.stage += 1
+                self.last_stage = now
+                self.image = image_explode[self.stage]
+
     
 
 
 
 
         
-r = Rock()
+w = power_up()
 p = Player((640, 600))
 player = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
-all_sprites.add(p, r)
+all_sprites.add(p)
+all_sprites.add(w)
 player.add(p)
 shootables = pygame.sprite.Group()
-shootables.add(r)
+powerUp = pygame.sprite.Group()
+powerUp.add(w)
 
 def spawn():
     for i in range(10 - len(shootables)):
@@ -173,7 +222,19 @@ while running:
     player_hit = pygame.sprite.spritecollide(p, shootables, False, pygame.sprite.collide_circle)
     if player_hit:
         running = False
+
+
+    hit = pygame.sprite.groupcollide(shootables, bullets, True, True)
+    for i in hit:
+        t = Explosion(i.rect.center)
+        all_sprites.add(t)
+    
+    if pygame.sprite.spritecollide(p, powerUp, True, pygame.sprite.collide_circle):
+            w.kill()
+            
+    
     pygame.display.flip()
     clock.tick(FPS)
+
 
 pygame.quit()

@@ -225,8 +225,7 @@ while running:
         e = Explosion(p.rect.center)
         all_sprites.add(e)
         running = False
-
-
+        
     hit = pygame.sprite.groupcollide(shootables, bullets, True, True)
     for i in hit:
         t = Explosion(i.rect.center)
