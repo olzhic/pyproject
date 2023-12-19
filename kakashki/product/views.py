@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 import random
 from product.models import Product
@@ -35,3 +35,39 @@ def guess(request, a):
         return HttpResponse(f"more ")
     elif a == b:
         return HttpResponse("congratulations!")
+
+
+def index(request):
+    products = Product.objects.all()
+    return render(request, "index.html", {"products":products})
+
+# сохранение данных в бд
+def create(request):
+    if request.method == "POST":
+        product = Product()
+        product.name = request.POST.get('name')
+        product.description = request.POST.get('description')
+        product.save()
+    return HttpResponseRedirect('/index')
+
+# изменение данных в бд
+def edit(request, id):
+    try:
+        product = Product.objects.get(id=id)
+        if request.method == "POST":
+            product.name = request.POST.get('name')
+            product.description = request.POST.get('description')
+            product.save()
+            return HttpResponseRedirect('/index')
+        else:
+            return render(request, "edit.html", {"prod":product})
+    except Product.DoesNotExist:
+        return HttpResponse('<h1> Person not found </h1>')
+
+def delete(request, id):
+    try:
+        product = Product.objects.get(id=id)
+        product.delete()
+        return HttpResponseRedirect('/index')
+    except Product.DoesNotExist:
+        return HttpResponse('<h1> Product does not exist imbecile </h1>')

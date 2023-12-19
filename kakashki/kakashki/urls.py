@@ -24,4 +24,8 @@ urlpatterns = [
     path('json/', views.json),
     path('calc/<int:a>/<str:c>/<int:b>', views.calculator),
     path('random/<int:a>', views.guess),
+    path('index/create/', views.create),
+    path('index/delete/<int:id>', views.delete),
+    path('index/edit/<int:id>', views.edit),
+
 ]
