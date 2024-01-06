@@ -12,7 +12,7 @@ def index(request):
         product_list.append(product)
         print(type(product))
     return HttpResponse(
-        f"<h1> {product_list[0].name} </h1> \n <h2>{product_list[0].description} </h2> \n <p>{product_list[0].count} </p> \n <p> {product_list[0].date } </p>" )
+        f"<h1> {product_list[0].name} </h1> \n <h2>{product_list[0].description} </h2> \n <p>{product_list[0].price} </p> " )
 
 def json(request):
     products = Product.object
@@ -47,6 +47,7 @@ def create(request):
         product = Product()
         product.name = request.POST.get('name')
         product.description = request.POST.get('description')
+        product.price = request.POST.get('price')
         product.save()
     return HttpResponseRedirect('/index')
 
@@ -57,6 +58,7 @@ def edit(request, id):
         if request.method == "POST":
             product.name = request.POST.get('name')
             product.description = request.POST.get('description')
+            product.price = request.POST.get('price')
             product.save()
             return HttpResponseRedirect('/index')
         else:
@@ -71,3 +73,12 @@ def delete(request, id):
         return HttpResponseRedirect('/index')
     except Product.DoesNotExist:
         return HttpResponse('<h1> Product does not exist imbecile </h1>')
+
+def info(request, A):
+    product = Product.objects.all()
+    for i in product:
+        if A == i.name:
+            return HttpResponse(i.description)
+    return HttpResponse('not found')
+
+

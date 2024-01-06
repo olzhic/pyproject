@@ -27,5 +27,5 @@ urlpatterns = [
     path('index/create/', views.create),
     path('index/delete/<int:id>', views.delete),
     path('index/edit/<int:id>', views.edit),
-
+    path('index/<str:A>', views.info),
 ]
