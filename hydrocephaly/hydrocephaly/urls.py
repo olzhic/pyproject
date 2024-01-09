@@ -21,4 +21,7 @@ from seria import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("index/", views.index),
+    path('index/create/', views.create),
+    path('index/delete/<int:id>', views.delete),
+    path('index/edit/<int:id>', views.edit),
 ]
