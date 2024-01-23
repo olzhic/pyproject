@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from seria import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,4 +25,10 @@ urlpatterns = [
     path('index/create/', views.create),
     path('index/delete/<int:id>', views.delete),
     path('index/edit/<int:id>', views.edit),
+    path('login/', auth_views.LoginView.as_view(), name ='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name = 'logout'),
+    path('home/', views.home, name='home'),
+    path('register/', views.register, name = 'register'),
+    path('admin/', admin.site.urls),
+    path('index/seria/<int:id>', views.seria)
 ]

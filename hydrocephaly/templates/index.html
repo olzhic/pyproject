@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <form method="POST" action="create/">
+            {% csrf_token %}
+            <p>
+                <label>Введите имя</label><br>
+                <input type="text" name="name" />
+            </p>
+            <p>
+                <label>Введите описание</label><br>
+                <input type="text" name="description" />
+            </p>
+            <p>
+                <label>Введите цену</label><br>
+                <input type="number" name="price" />
+            </p>
+            <input type="submit" value="Сохранить" >
+        </form>
+        {% if products.count > 0 %}
+        <h2>Список предметов</h2>
+        <table>
+            <thead><th>Id</th><th>Имя</th><th>Описание</th><th>Цена</th><th></th></thead>
+            {% for prod in products %}
+            <tr>
+                <td>{{ prod.id }}</td>
+                <td>{{ prod.name }}</td>
+                <td>{{ prod.description }}</td>
+                <td>{{ prod.price }}</td>
+                <td><a href="edit/{{prod.id}}">Изменить</a> | <a href="delete/{{prod.id}}">Удалить</a> | <a href="seria/{{prod.id}}">Serialized</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </body>
+</html>

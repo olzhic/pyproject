@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <form method="POST">
+            {% csrf_token %}
+            <p>
+                <label>Введите имя</label><br>
+                <input type="text" name="name" value="{{prod.name}}" />
+            </p>
+            <p>
+                <label>Введите описание</label><br>
+                <input type="text" name="description" value="{{prod.description}}" />
+            </p>
+            <p>
+                <label>Введите цену</label><br>
+                <input type="number" name="price" value="{{prod.price}}" />
+            </p>
+            <input type="submit" value="Сохранить" >
+        </form>
+    </body>
+</html>
