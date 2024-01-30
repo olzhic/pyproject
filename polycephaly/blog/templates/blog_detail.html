@@ -60,13 +60,17 @@
 					</form>
 				</div>
 			</div>
+			
 			<div>
 				{% for comment in post.comments_set.all %}
 				<div class="view-comment">
 					<h4>{{ comment.name }}</h4>
 					<p>
 						{{ comment.text_comments }}
-					</p>
+					</p>	
+				</div>
+				<div class = "like", action= "{% url 'add_like' comment.id %}">
+					<button> Like </button>
 				</div>
 				{% endfor %}
 			</div>
@@ -79,7 +83,7 @@
 	</div>
 
 	<div id="footer">
-		<p class="copy right">Copyright &copy;  2022 </p>
+		<p class="copy right">Copyright &copy;  2024 </p>
 	</div>
 </div>
 </body>

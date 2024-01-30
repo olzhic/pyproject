@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from .models import Post
 from .form import CommentsForm
+from .models import Like
+
 # Create your views here.
 
 class PostView(View):
@@ -24,4 +26,10 @@ class AddComments(View):
             form = form.save(commit = False)
             form.post_id = pk
             form.save()
+        return redirect(f'/{pk}')
+    
+    def like(self, request, pk):
+        like = Like()
+        like.clicked = True
+        like.save()
         return redirect(f'/{pk}')
