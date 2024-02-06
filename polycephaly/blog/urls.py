@@ -9,4 +9,6 @@ urlpatterns = [
     path('review/<int:pk>/', views.AddComments.as_view(), name = 'add_comments'),
     path('review/<int:pk>/', views.AddComments.as_view(), name = 'add_like'),
     path('register/', views.register, name = 'register'),
+    path('login/', auth_views.LoginView.as_view(), name ='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name = 'logout'),
 ]

@@ -6,6 +6,7 @@ from .models import Like
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -24,20 +25,25 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 
+
+
 class PostView(View):
 
     def get(self, request):
         posts = Post.objects.all()
-        return render(request, 'blog.html', {'post_list':posts})
-    
+        return render(self.request, 'blog.html', {'post_list':posts})
+
+
+method_decorator(login_required, "get")
 class PostDetail(View):
-    @login_required
     def get(self, request, pk):
+        
         post = Post.objects.get(id = pk)
         return render(request, 'blog_detail.html', {'post':post})
-    
+
+method_decorator(login_required, "post")
 class AddComments(View):
-    @login_required
+    
     def post(self, request, pk):
         form = CommentsForm(request.POST)
         if form.is_valid():
@@ -46,8 +52,4 @@ class AddComments(View):
             form.save()
         return redirect(f'/{pk}')
     
-    def like(self, request, pk):
-        like = Like()
-        like.clicked = True
-        like.save()
-        return redirect(f'/{pk}')
+    
