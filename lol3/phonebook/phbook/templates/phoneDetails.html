@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/static.css}">
+</head>
+<body>
+<div class="contacts-container">
+    <h1>Contact List</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="contact: ${contacts}">
+            <td th:text="${contact.id}"></td>
+            <td th:text="${contact.name}"></td>
+            <td th:text="${contact.phone}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

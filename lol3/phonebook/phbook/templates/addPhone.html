@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/static.css}">
+</head>
+<body>
+
+<div class="search-form">
+    <h1>Добавление контакта</h1>
+    <form action="/contact/add" method="post">
+        <input type="text" name="name" placeholder="Имя">
+        <input type="text" name="phone" placeholder="Номер">
+        <button type="submit"> Добавить контакт </button>
+    </form>
+
+</div>
+
+</body>
+</html>
