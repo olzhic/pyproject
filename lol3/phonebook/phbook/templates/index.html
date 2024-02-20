@@ -20,12 +20,14 @@
         </tr>
         </thead>
         <tbody>
-        
-        <tr th:each={{ contacts }}>
-            <td th:utext={{ contacts.id }}></td>
-            <td th:utext={{ contacts.name }}></td>
-            <td th:utext={{ contacts.number }}></td>
-        </tr>
+            {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.number }}</td>
+                <td><a href="edit/{{contact.id}}">Изменить</a> | <a href="delete{{contact.id}}">Удалить</a></td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 

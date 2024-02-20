@@ -9,7 +9,8 @@
 
 <div class="search-form">
     <h1>Добавление контакта</h1>
-    <form action="/contact/add" method="post">
+    <form action="/add" method="post">
+        {% csrf_token %}
         <input type="text" name="name" placeholder="Имя">
         <input type="text" name="phone" placeholder="Номер">
         <button type="submit"> Добавить контакт </button>
