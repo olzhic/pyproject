@@ -17,6 +17,7 @@
             <th>ID</th>
             <th>Имя</th>
             <th>Телефон</th>
+            <th><a href = "search">/Искат</a></th>
         </tr>
         </thead>
         <tbody>
@@ -25,7 +26,7 @@
                 <td>{{ contact.id }}</td>
                 <td>{{ contact.name }}</td>
                 <td>{{ contact.number }}</td>
-                <td><a href="edit/{{contact.id}}">Изменить</a> | <a href="delete{{contact.id}}">Удалить</a></td>
+                <td><a href="edit/{{contact.id}}">Изменить</a> | <a href="delete/{{contact.id}}">Удалить</a></td>
             </tr>
             {% endfor %}
         </tbody>

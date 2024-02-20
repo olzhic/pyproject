@@ -10,7 +10,21 @@ from .models import Contacts
 from .serial import ContactSerializer
 # Create your views here.
 
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username = username, password = password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
+@login_required
 def add_contact(request):
     if request.method == "POST":
         contact = Contacts()
@@ -28,7 +42,7 @@ class ContactView(View):
         kontacts = Contacts.objects.all()
         return render(request, 'index.html', {'contacts':kontacts})
     
-#@login_required
+@login_required
 def edit(request, id):
     try:
         contact = Contacts.objects.get(id=id)
@@ -42,7 +56,7 @@ def edit(request, id):
     except Contacts.DoesNotExist:
         return HttpResponse('<h1> Person not found </h1>')
     
-#@login_required
+@login_required
 def delete(request, id):
     try:
         contact = Contacts.objects.get(id=id)
@@ -51,8 +65,28 @@ def delete(request, id):
     except Contacts.DoesNotExist:
         return HttpResponse('<h1> Product does not exist imbecile </h1>')
     
-#@login_required
+@login_required
 def seria(request, id):
     order = Contacts.objects.get(id=id)
     serializer = ContactSerializer(order)
     return HttpResponse(f'{serializer.data}')
+
+@login_required
+def search(request):
+    if request.method == "POST":
+        nameOrnumber = str(request.POST.get("name"))
+        if nameOrnumber.isdigit():
+            try:
+                name = Contacts.objects.get(number = nameOrnumber)
+                serializer = ContactSerializer(name)
+                return HttpResponse(f'{serializer.data}')
+            except:
+                return HttpResponse('<h1>poshel nahui</h1>')
+        else:
+            try:
+                name = Contacts.objects.get(name = nameOrnumber)
+                serializer = ContactSerializer(name)
+                return HttpResponse(f'{serializer.data}')
+            except:
+                return HttpResponse('<h1>poshel nahui</h1>')
+    return render(request, "contactFinder.html")

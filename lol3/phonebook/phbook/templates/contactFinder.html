@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="search-form">
-    <form action="/contact/finder" method="post">
+    <form action="/search" method="post">
+        {% csrf_token %}
         <input type="text" name="name" placeholder="Введите имя или телефон">
         <button type="submit" >Искать</button>
     </form>
