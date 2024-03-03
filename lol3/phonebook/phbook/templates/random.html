@@ -1,0 +1,14 @@
+<!DOCTYPE>
+<html>
+    <head>
+    </head>
+    <body>
+        {% csrf_token %}
+        <form action = "/random", method = 'post'>
+            <input name="a">
+            <input name="b">
+            <button type = "submit"></button>
+        </form>
+        {{ randNumber }}
+    </body>
+</html>

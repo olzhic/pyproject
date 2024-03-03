@@ -8,7 +8,27 @@ from django.utils.decorators import method_decorator
 from .form import ContactsForm
 from .models import Contacts
 from .serial import ContactSerializer
+from django.core.paginator import Paginator
+from django.shortcuts import render
+import random
+from random import randint
+
 # Create your views here.
+def randomize(request):
+    randNumber = 0
+    if request.method == "POST":
+        a = request.POST.get("a")
+        b = request.POST.get("b")
+        randNumber = randint(int(a), int(b))
+    
+    return render(request, "random.html", {"randNumber":randNumber})
+def listing(request):
+    contact_list = Contacts.objects.all()
+    paginator = Paginator(contact_list, 25) 
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "list.html", {"page_obj": page_obj})
 
 def register(request):
     if request.method == "POST":
@@ -24,6 +44,9 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
+
+    
+    
 @login_required
 def add_contact(request):
     if request.method == "POST":
