@@ -22,6 +22,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('add', views.add_todo),
-    path("", views.TodoView.as_view())
+    path("", views.TodoView.as_view()),
+    path('edit/<int:id>', views.edit),
+    path('delete/<int:id>', views.delete)
     
 ]

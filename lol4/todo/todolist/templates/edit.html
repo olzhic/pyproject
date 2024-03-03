@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <form method="POST">
+            {% csrf_token %}
+            <p>
+                <label>Введите что сделать</label><br>
+                <input type="text" name="name" value="{{todos.doing}}" />
+            </p>
+            <p>
+                <label>Введите дату</label><br>
+                <input type="date" name="description" value="{{todos.time}}" />
+            </p>
+            <input type="submit" value="Сохранить" >
+        </form>
+    </body>
+</html>

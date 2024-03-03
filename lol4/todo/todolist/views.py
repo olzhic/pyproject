@@ -10,6 +10,8 @@ from django.shortcuts import render
 import random
 from random import randint
 from todolist import models
+from .models import todos
+
 def add_todo(request):
     if request.method == "POST":
         todo = models.todos()
@@ -23,4 +25,27 @@ class TodoView(View):
         
     def get(self, request):
         Todos = models.todos.objects.all()
-        return render(request, 'index.html', {'todos':Todos})
+        return render(request, 'index.html', {'todos':Todos})\
+        
+
+def edit(request, id):
+    try:
+        todo = todos.objects.get(id=id)
+        if request.method == "POST":
+            todo.doing = request.POST.get('doing')
+            todo.time = request.POST.get('time')
+            todo.save()
+            return HttpResponseRedirect('/')
+        else:
+            return render(request, "edit.html", {'todos':todo})
+    except todos.DoesNotExist:
+        return HttpResponse('<h1> Todo not found </h1>')
+    
+def delete(request, id):
+    try:
+        todo = todos.objects.get(id=id)
+        todo.delete()
+        return HttpResponseRedirect('/')
+    except todos.DoesNotExist:
+        return HttpResponse('<h1> Todo does not exist imbecile </h1>')
+    
