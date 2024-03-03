@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/static.css}">
+</head>
+<body>
+
+<div class="search-form">
+    <h1>Добавление заметки</h1>
+    <form action="/add" method="post">
+        {% csrf_token %}
+        <input type="text" name="doing" placeholder="Сделать">
+        <input type="date" name="time" placeholder="Дата">
+        <button type="submit"> Сохранить </button>
+    </form>
+
+</div>
+
+</body>
+</html>

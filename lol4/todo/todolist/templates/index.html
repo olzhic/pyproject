@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/static.css}">
+</head>
+<body>
+
+<div class="contacts-container">
+    <h1>Заметки</h1>
+
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Дела</th>
+            <th>Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for todo in todos %}
+            <tr>
+                <td>{{ todo.id }}</td>
+                <td>{{ todo.doing }}</td>
+                <td>{{ todo.time }}</td>
+                <td><a href="edit/{{todo.id}}">Изменить</a> | <a href="delete/{{todo.id}}">Удалить</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
+</html>
